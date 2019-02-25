@@ -6,6 +6,7 @@ in it, not a learning switch.  (I.e., it's currently a switch
 that doesn't learn.)
 '''
 from switchyard.lib.userlib import *
+import collections
 
 # The implementation of the data structrue below is adapted from leetcode.
 # https://leetcode.com/problems/lru-cache/discuss/45952/Python-concise-solution-with-comments-(Using-OrderedDict).
