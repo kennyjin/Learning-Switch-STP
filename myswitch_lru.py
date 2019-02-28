@@ -68,7 +68,6 @@ class FwdTable:
 def main(net):
     my_interfaces = net.interfaces() 
     mymacs = [intf.ethaddr for intf in my_interfaces]
-
     # Set up the forwarding table
     TABLE_CAPACITY = 5
     fwdTable = FwdTable(TABLE_CAPACITY)
@@ -105,6 +104,9 @@ def main(net):
         else:
             fwdTable.set(packet[0].src, input_port)
 
+        if packet[0].dst in mymacs:
+            log_debug ("Packet intended for me")
+            continue
         # Determine if entry for destination exists in table
         if fwdTable.contain(packet[0].dst):
             # Update MRU entry and fwd packet
@@ -117,17 +119,9 @@ def main(net):
                 if input_port != intf.name:
                     log_debug ("Flooding packet {} to {}".format(packet, intf.name))
                     net.send_packet(intf.name, packet)
-
-                
-
-
-
-
-        if packet[0].dst in mymacs:
-            log_debug ("Packet intended for me")
-        else:
-            for intf in my_interfaces:
-                if input_port != intf.name:
-                    log_debug ("Flooding packet {} to {}".format(packet, intf.name))
-                    net.send_packet(intf.name, packet)
+        # else:
+        #     for intf in my_interfaces:
+        #         if input_port != intf.name:
+        #             log_debug ("Flooding packet {} to {}".format(packet, intf.name))
+        #             net.send_packet(intf.name, packet)
     net.shutdown()
