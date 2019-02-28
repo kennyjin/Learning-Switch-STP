@@ -6,7 +6,10 @@ in it, not a learning switch.  (I.e., it's currently a switch
 that doesn't learn.)
 '''
 from switchyard.lib.userlib import *
+<<<<<<< HEAD
 import collections
+=======
+>>>>>>> 8946caf30cfa0237392b33f5e94f691248d38fd2
 
 # The implementation of the data structrue below is adapted from leetcode.
 # https://leetcode.com/problems/lru-cache/discuss/45952/Python-concise-solution-with-comments-(Using-OrderedDict).
@@ -68,6 +71,10 @@ class FwdTable:
 def main(net):
     my_interfaces = net.interfaces() 
     mymacs = [intf.ethaddr for intf in my_interfaces]
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8946caf30cfa0237392b33f5e94f691248d38fd2
     # Set up the forwarding table
     TABLE_CAPACITY = 5
     fwdTable = FwdTable(TABLE_CAPACITY)
@@ -104,9 +111,11 @@ def main(net):
         else:
             fwdTable.set(packet[0].src, input_port)
 
+
         if packet[0].dst in mymacs:
             log_debug ("Packet intended for me")
             continue
+
         # Determine if entry for destination exists in table
         if fwdTable.contain(packet[0].dst):
             # Update MRU entry and fwd packet
@@ -123,12 +132,4 @@ def main(net):
                 
 
 
-
-
-        
-        # else:
-        #     for intf in my_interfaces:
-        #         if input_port != intf.name:
-        #             log_debug ("Flooding packet {} to {}".format(packet, intf.name))
-        #             net.send_packet(intf.name, packet)
     net.shutdown()
