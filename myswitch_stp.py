@@ -70,6 +70,14 @@ def main(net):
     fwdTable = FwdTable(TABLE_CAPACITY)
 
     # 1. Add id to the switch, in this case the smallest MAC address among all addresses.
+    min_mac = mymacs[0]
+    for mac in mymacs:
+        log_debug(mac)
+        if mac < min_mac:
+            min_mac = mac
+    log_debug(min_mac)
+
+
 
     # 2. Import the packet header type in spanningtreemessage.py
 
