@@ -62,6 +62,16 @@ class FwdTable:
         return False
 
 
+def mk_stp_pkt(root_id, hops, hwsrc="20:00:00:00:00:01", hwdst="ff:ff:ff:ff:ff:ff"):
+    spm = SpanningTreeMessage(root=root_id, hops_to_root=hops)
+    Ethernet.add_next_header_class(EtherType.SLOW, SpanningTreeMessage)
+    pkt = Ethernet(src=hwsrc,
+                   dst=hwdst,
+                   ethertype=EtherType.SLOW) + spm
+    xbytes = pkt.to_bytes()
+    p = Packet(raw=xbytes)
+    return p
+
 
 def main(net):
     my_interfaces = net.interfaces() 
@@ -105,14 +115,11 @@ def main(net):
     #    All the ports of the router will be in forwarding mode.
 
     # Create a stp packet
-    stpPktHeader = SpanningTreeMessage(root_id)
-    # log_debug(str(stpPktHeader)) 
-    stpPkt = Packet()
-    stpPkt += Ethernet()
-    stpPkt.add_header(stpPktHeader)
+    stpPkt = mk_stp_pkt(root_id, root_hop_num)
     log_debug(str(stpPkt))
 
-
+    
+    
     # 5. When a node receives a spanning tree packet it examines the root attribute:
 
     # a. If the id in the received packet is smaller than the id that the node currently thinks is the root, 
