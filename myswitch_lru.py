@@ -1,9 +1,6 @@
 '''
 Ethernet learning switch in Python.
 
-Note that this file currently has the code to implement a "hub"
-in it, not a learning switch.  (I.e., it's currently a switch
-that doesn't learn.)
 '''
 from switchyard.lib.userlib import *
 import collections
