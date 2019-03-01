@@ -3,6 +3,7 @@ Ethernet learning switch with a simple spanning tree protocal in Python.
 
 '''
 from switchyard.lib.userlib import *
+from .spanningtreemessage import SpanningTreeMessage
 import collections
 
 # The implementation of the data structrue below is adapted from leetcode.
@@ -76,7 +77,7 @@ def main(net):
         if mac < min_mac:
             min_mac = mac
     log_debug(min_mac)
-
+    switch_id = min_mac
 
 
     # 2. Import the packet header type in spanningtreemessage.py
