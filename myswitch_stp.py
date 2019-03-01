@@ -3,7 +3,7 @@ Ethernet learning switch with a simple spanning tree protocal in Python.
 
 '''
 from switchyard.lib.userlib import *
-from .spanningtreemessage import SpanningTreeMessage
+from spanningtreemessage import SpanningTreeMessage
 import collections
 
 # The implementation of the data structrue below is adapted from leetcode.
