@@ -71,6 +71,7 @@ def main(net):
     fwdTable = FwdTable(TABLE_CAPACITY)
 
     # 1. Add id to the switch, in this case the smallest MAC address among all addresses.
+
     min_mac = mymacs[0]
     for mac in mymacs:
         log_debug(mac)
@@ -78,7 +79,6 @@ def main(net):
             min_mac = mac
     log_debug(min_mac)
     switch_id = min_mac
-
 
     # 2. Import the packet header type in spanningtreemessage.py
 
@@ -92,11 +92,21 @@ def main(net):
     
     #    Each non-root node also needs to remember which interface on which spanning tree message from the perceived root arrives.
 
+    root_id = switch_id
+    root_hop_num = 0
+    # Initialize time to be 0. Not sure if this will cause problem.
+    time_last_stpmsg = 0
+    port_root_stpmsg = None
+
     # 4. Only root node generate STP packets periodically. Initially, a node assumes that it is the root.
 
     #    These packets are initialized with the switch's own id and 0 as the number of hops to the root.
     #    The root node should emit new stp packets every 2 seconds.
     #    All the ports of the router will be in forwarding mode.
+
+    stpPktHeader = SpanningTreeMessage(root_id)
+    log_debug(str(stpPktHeader)) 
+
 
     # 5. When a node receives a spanning tree packet it examines the root attribute:
 
