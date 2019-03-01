@@ -74,10 +74,10 @@ def main(net):
 
     min_mac = mymacs[0]
     for mac in mymacs:
-        log_debug(mac)
+        # log_debug(mac)
         if mac < min_mac:
             min_mac = mac
-    log_debug(min_mac)
+    # log_debug(min_mac)
     switch_id = min_mac
 
     # 2. Import the packet header type in spanningtreemessage.py
@@ -104,8 +104,13 @@ def main(net):
     #    The root node should emit new stp packets every 2 seconds.
     #    All the ports of the router will be in forwarding mode.
 
+    # Create a stp packet
     stpPktHeader = SpanningTreeMessage(root_id)
-    log_debug(str(stpPktHeader)) 
+    # log_debug(str(stpPktHeader)) 
+    stpPkt = Packet()
+    stpPkt += Ethernet()
+    stpPkt.add_header(stpPktHeader)
+    log_debug(str(stpPkt))
 
 
     # 5. When a node receives a spanning tree packet it examines the root attribute:
