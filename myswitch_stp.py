@@ -122,9 +122,9 @@ def main(net):
     # Forward packets on all ports
     for intf in my_interfaces:
         # Set this interface to forwarding mode
-        fwdModeDict[intf] = True
-        log_debug(intf)
-        log_debug(fwdModeDict[intf])
+        fwdModeDict[intf.name] = True
+        log_debug(intf.name)
+        log_debug(fwdModeDict[intf.name])
         # Create a stp packet
         stpPkt = mk_stp_pkt(root_id, root_hop_num)
         log_debug ("Flooding packet {} to {}".format(stpPkt, intf.name))
@@ -283,7 +283,7 @@ def main(net):
         else:
             # Forward packets on all ports(except incoming)
             for intf in my_interfaces:
-                if input_port != intf.name and fwdModeDict[input_port] == True:
+                if input_port != intf.name and fwdModeDict[intf.name] == True:
                     log_debug ("Flooding packet {} to {}".format(packet, intf.name))
                     net.send_packet(intf.name, packet)
         # else:
