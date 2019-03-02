@@ -243,6 +243,9 @@ def main(net):
                         fwdModeDict[input_port] = False
                     continue
 
+            if stpmsg.root > root_id:
+                continue
+
 
         # Lastly, the learning switch forwarding algorithm changes a bit in the context of a spanning tree. 
         # Instead of flooding a frame with an unknown destination Ethernet address out every port 
