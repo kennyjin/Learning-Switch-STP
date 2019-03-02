@@ -189,7 +189,7 @@ def main(net):
                     if input_port != intf.name:
                         stpPkt = mk_stp_pkt(root_id, root_hop_num, switch_id, packet[0].dst)
                         log_debug ("Flooding packet {} to {}".format(stpPkt, intf.name))
-                        net.send_packet(intf.name, packet)
+                        net.send_packet(intf.name, stpPkt)
 
 
         
