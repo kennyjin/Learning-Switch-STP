@@ -152,17 +152,25 @@ def main(net):
         # Determine if the packet is a spanning tree packet
 
         if packet[0].ethertype == EtherType.SLOW:
-            log_debug("EtherType == SLOW!")
+
+            log_debug("This is a spanning tree packet!")
+
+            # 5. When a node receives a spanning tree packet it examines the root attribute:
+
+            # a. If the id in the received packet is smaller than the id that the node currently thinks is the root, 
+            #    the id in the received packet becomes the new root.
+            #    The node should then forward the packet out all interfaces except for the one on which the packet was received.
+            #    Prior to forwarding, the number of hops to the root should be incremented by 1.
+            #    The interface on which the spanning tree message arrived must be set to forwarding mode if it is not already set
+            #    the number of hops to the root (the value in the received packet + 1) must be recorded
+
+            stpmsg = packet.get_header()
+
+            log_debug(stpmsg.root())
+            log_debug(stpmsg.hops_to_root())
+
+
         
-
-        # 5. When a node receives a spanning tree packet it examines the root attribute:
-
-        # a. If the id in the received packet is smaller than the id that the node currently thinks is the root, 
-        #    the id in the received packet becomes the new root.
-        #    The node should then forward the packet out all interfaces except for the one on which the packet was received.
-        #    Prior to forwarding, the number of hops to the root should be incremented by 1.
-        #    The interface on which the spanning tree message arrived must be set to forwarding mode if it is not already set
-        #    the number of hops to the root (the value in the received packet + 1) must be recorded
 
         # b. If the id in the received packet is the same as the id that the node currently thinks is the root, 
         #    it examines the number of hops to the root value:
