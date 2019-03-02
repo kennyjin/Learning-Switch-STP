@@ -170,7 +170,7 @@ def main(net):
         except NoPackets:
             curr_time = time.time()
             # Send packets every 2 seconds
-            if root_id == switch_id && curr_time - time_last_fwding >= 2:
+            if root_id == switch_id and curr_time - time_last_fwding >= 2:
                 time_last_fwding = curr_time
                 # Forward packets on all ports
                 for intf in my_interfaces:
