@@ -182,11 +182,12 @@ def main(net):
 
                 root_id = stpmsg.root
                 root_hop_num = stpmsg.hops_to_root + 1
+                log_debug(root_hop_num)
 
                  # Forward packets on all ports(except incoming)
                 for intf in my_interfaces:
                     if input_port != intf.name:
-                        stpPkt = mk_stp_pkt(root_id, root_hop_num, packet[0].src, packet[0].dst)
+                        stpPkt = mk_stp_pkt(root_id, root_hop_num, switch_id, packet[0].dst)
                         log_debug ("Flooding packet {} to {}".format(stpPkt, intf.name))
                         net.send_packet(intf.name, packet)
 
