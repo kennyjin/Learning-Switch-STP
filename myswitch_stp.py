@@ -166,8 +166,8 @@ def main(net):
 
             stpmsg = packet.get_header(SpanningTreeMessage)
 
-            log_debug(stpmsg.root())
-            log_debug(stpmsg.hops_to_root())
+            log_debug(stpmsg.root)
+            log_debug(stpmsg.hops_to_root)
 
 
         
