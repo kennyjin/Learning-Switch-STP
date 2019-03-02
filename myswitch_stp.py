@@ -118,8 +118,8 @@ def main(net):
     for intf in my_interfaces:
         # Create a stp packet
         stpPkt = mk_stp_pkt(root_id, root_hop_num)
-        log_debug ("Flooding packet {} to {}".format(packet, intf.name))
-        net.send_packet(intf.name, packet)
+        log_debug ("Flooding packet {} to {}".format(stpPkt, intf.name))
+        net.send_packet(intf.name, stpPkt)
     
     
     # 5. When a node receives a spanning tree packet it examines the root attribute:
