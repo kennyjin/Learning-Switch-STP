@@ -211,6 +211,8 @@ def main(net):
         #
             if stpmsg.root == root_id:
                 if stpmsg.hops_to_root + 1 < root_hop_num:
+                    # Record the port of the root stpmsg
+                    port_root_stpmsg = input_port
                     # Set the interface to fwding mode
                     fwdModeDict[input_port] = True
                     root_hop_num = stpmsg.hops_to_root + 1
@@ -220,16 +222,26 @@ def main(net):
                             stpPkt = mk_stp_pkt(root_id, root_hop_num, switch_id, packet[0].dst)
                             log_debug ("Flooding packet {} to {}".format(stpPkt, intf.name))
                             net.send_packet(intf.name, stpPkt)
-                continue
+                    continue
 
     
 
         # If the number of hops to the root + 1 is greater than the value that the switch has stored, 
         # just ignore the packet and do nothing
 
+                if stpmsg.hops_to_root + 1 > root_hop_num:
+                    continue
+
         # If the number of hops to the root + 1 equal to the value that the switch has stored, 
         # but is different from the initial port it got this message from, 
         # it should set the interface on which this packet arrived to blocking mode.
+
+                if stpmsg.hops_to_root + 1 == root_hop_num:
+                    if port_root_stpmsg != input_port:
+                        # Record the port of the root stpmsg
+                        port_root_stpmsg = input_port
+                        fwdModeDict[input_port] = False
+                    continue
 
 
         # Lastly, the learning switch forwarding algorithm changes a bit in the context of a spanning tree. 
@@ -267,7 +279,7 @@ def main(net):
         else:
             # Forward packets on all ports(except incoming)
             for intf in my_interfaces:
-                if input_port != intf.name:
+                if input_port != intf.name and fwdModeDict[input_port] == True:
                     log_debug ("Flooding packet {} to {}".format(packet, intf.name))
                     net.send_packet(intf.name, packet)
         # else:
