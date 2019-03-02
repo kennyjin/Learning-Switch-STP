@@ -160,6 +160,8 @@ def main(net):
 
         if packet[0].ethertype == EtherType.SLOW:
 
+            # Record the time of last spanning tree msg
+            time_last_stpmsg = time.time()
             log_debug("This is a spanning tree packet!")
 
             # 5. When a node receives a spanning tree packet it examines the root attribute:
@@ -184,15 +186,20 @@ def main(net):
                 root_hop_num = stpmsg.hops_to_root + 1
                 log_debug(root_hop_num)
 
-                 # Forward packets on all ports(except incoming)
+                # Set the interface to fwding mode
+                fwdModeDict[input_port] = True
+
+                # Record the port of the root stpmsg
+                port_root_stpmsg = input_port
+
+                # Forward packets on all ports(except incoming)
                 for intf in my_interfaces:
                     if input_port != intf.name:
                         stpPkt = mk_stp_pkt(root_id, root_hop_num, switch_id, packet[0].dst)
                         log_debug ("Flooding packet {} to {}".format(stpPkt, intf.name))
                         net.send_packet(intf.name, stpPkt)
+                continue
 
-
-        
 
         # b. If the id in the received packet is the same as the id that the node currently thinks is the root, 
         #    it examines the number of hops to the root value:
@@ -202,6 +209,19 @@ def main(net):
         # The switch should then forward the spanning tree message out all interfaces except the one on which the message arrived, 
         # incrementing the number of hops to the root by 1 prior to forwarding.
         #
+            if stpmsg.root == root_id:
+                if stpmsg.hops_to_root + 1 < root_hop_num:
+                    # Set the interface to fwding mode
+                    fwdModeDict[input_port] = True
+                    root_hop_num = stpmsg.hops_to_root + 1
+                    # Forward packets on all ports(except incoming)
+                    for intf in my_interfaces:
+                        if input_port != intf.name:
+                            stpPkt = mk_stp_pkt(root_id, root_hop_num, switch_id, packet[0].dst)
+                            log_debug ("Flooding packet {} to {}".format(stpPkt, intf.name))
+                            net.send_packet(intf.name, stpPkt)
+                continue
+
     
 
         # If the number of hops to the root + 1 is greater than the value that the switch has stored, 
