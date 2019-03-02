@@ -164,7 +164,7 @@ def main(net):
             #    The interface on which the spanning tree message arrived must be set to forwarding mode if it is not already set
             #    the number of hops to the root (the value in the received packet + 1) must be recorded
 
-            stpmsg = packet.get_header()
+            stpmsg = packet.get_header(SpanningTreeMessage)
 
             log_debug(stpmsg.root())
             log_debug(stpmsg.hops_to_root())
