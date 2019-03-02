@@ -109,19 +109,26 @@ def main(net):
     time_last_stpmsg = 0
     port_root_stpmsg = None
 
+    # Set up fwding mode dictionary
+
+    fwdModeDict = {}
+
     # 4. Only root node generate STP packets periodically. Initially, a node assumes that it is the root.
 
     #    These packets are initialized with the switch's own id and 0 as the number of hops to the root.
     #    The root node should emit new stp packets every 2 seconds.
     #    All the ports of the router will be in forwarding mode.
-
     time_last_fwding = time.time()
     # Forward packets on all ports
     for intf in my_interfaces:
+        # Set this interface to forwarding mode
+        fwdModeDict[intf] = True
+        log_debug(fwdModeDict[intf])
         # Create a stp packet
         stpPkt = mk_stp_pkt(root_id, root_hop_num)
         log_debug ("Flooding packet {} to {}".format(stpPkt, intf.name))
         net.send_packet(intf.name, stpPkt)
+
 
 
     while True:
@@ -168,6 +175,20 @@ def main(net):
 
             log_debug(stpmsg.root)
             log_debug(stpmsg.hops_to_root)
+            log_debug(packet[0].src)
+            log_debug(packet[0].dsc)
+
+            if stpmsg.root < root_id:
+
+                root_id = stpmsg.root
+                root_hop_num = stpmsg.hops_to_root + 1
+
+                 # Forward packets on all ports(except incoming)
+                for intf in my_interfaces:
+                    if input_port != intf.name:
+                        stpPkt = mk_stp_pkt(root_id, root_hop_num, packet[0].src, packet[0].dsc)
+                        log_debug ("Flooding packet {} to {}".format(stpPkt, intf.name))
+                        net.send_packet(intf.name, packet)
 
 
         
