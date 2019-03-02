@@ -122,46 +122,6 @@ def main(net):
         stpPkt = mk_stp_pkt(root_id, root_hop_num)
         log_debug ("Flooding packet {} to {}".format(stpPkt, intf.name))
         net.send_packet(intf.name, stpPkt)
-    
-    
-    # 5. When a node receives a spanning tree packet it examines the root attribute:
-
-    # a. If the id in the received packet is smaller than the id that the node currently thinks is the root, 
-    #    the id in the received packet becomes the new root.
-    #    The node should then forward the packet out all interfaces except for the one on which the packet was received.
-    #    Prior to forwarding, the number of hops to the root should be incremented by 1.
-    #    The interface on which the spanning tree message arrived must be set to forwarding mode if it is not already set
-    #    the number of hops to the root (the value in the received packet + 1) must be recorded
-
-    # b. If the id in the received packet is the same as the id that the node currently thinks is the root, 
-    #    it examines the number of hops to the root value:
-
-    # If the number of hops to the root + 1 is less than the value that the switch has stored, 
-    # it sets the interface on which this packet has arrived to forwarding mode (If it is not already set). 
-    # The switch should then forward the spanning tree message out all interfaces except the one on which the message arrived, 
-    # incrementing the number of hops to the root by 1 prior to forwarding.
-    #
-    
-
-    # If the number of hops to the root + 1 is greater than the value that the switch has stored, 
-    # just ignore the packet and do nothing
-
-    # If the number of hops to the root + 1 equal to the value that the switch has stored, 
-    # but is different from the initial port it got this message from, 
-    # it should set the interface on which this packet arrived to blocking mode.
-
-
-    # Lastly, the learning switch forwarding algorithm changes a bit in the context of a spanning tree. 
-    # Instead of flooding a frame with an unknown destination Ethernet address out every port 
-    # (except the one on which the frame was received), a switch only floods a frame out every port 
-    # (again, except the input port) if and only if the interface is in forwarding mode.
-
-
-
-
-
-
-
 
 
     while True:
@@ -188,6 +148,45 @@ def main(net):
         # port, in this case, is input_port
 
         log_debug ("In {} received packet {} on {}".format(net.name, packet, input_port))
+
+        # Determine if the packet is a spanning tree packet
+
+        if packet[0].ethertype == EtherType.SLOW:
+            log_debug("EtherType == SLOW!")
+        
+
+        # 5. When a node receives a spanning tree packet it examines the root attribute:
+
+        # a. If the id in the received packet is smaller than the id that the node currently thinks is the root, 
+        #    the id in the received packet becomes the new root.
+        #    The node should then forward the packet out all interfaces except for the one on which the packet was received.
+        #    Prior to forwarding, the number of hops to the root should be incremented by 1.
+        #    The interface on which the spanning tree message arrived must be set to forwarding mode if it is not already set
+        #    the number of hops to the root (the value in the received packet + 1) must be recorded
+
+        # b. If the id in the received packet is the same as the id that the node currently thinks is the root, 
+        #    it examines the number of hops to the root value:
+
+        # If the number of hops to the root + 1 is less than the value that the switch has stored, 
+        # it sets the interface on which this packet has arrived to forwarding mode (If it is not already set). 
+        # The switch should then forward the spanning tree message out all interfaces except the one on which the message arrived, 
+        # incrementing the number of hops to the root by 1 prior to forwarding.
+        #
+    
+
+        # If the number of hops to the root + 1 is greater than the value that the switch has stored, 
+        # just ignore the packet and do nothing
+
+        # If the number of hops to the root + 1 equal to the value that the switch has stored, 
+        # but is different from the initial port it got this message from, 
+        # it should set the interface on which this packet arrived to blocking mode.
+
+
+        # Lastly, the learning switch forwarding algorithm changes a bit in the context of a spanning tree. 
+        # Instead of flooding a frame with an unknown destination Ethernet address out every port 
+        # (except the one on which the frame was received), a switch only floods a frame out every port 
+        # (again, except the input port) if and only if the interface is in forwarding mode.
+
 
         # Determine if table contains entry for src address
         if fwdTable.contain(packet[0].src):
