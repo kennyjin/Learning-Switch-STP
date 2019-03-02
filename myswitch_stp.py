@@ -114,10 +114,12 @@ def main(net):
     #    The root node should emit new stp packets every 2 seconds.
     #    All the ports of the router will be in forwarding mode.
 
-    # Create a stp packet
-    stpPkt = mk_stp_pkt(root_id, root_hop_num)
-    log_debug(str(stpPkt))
-
+    # Forward packets on all ports
+    for intf in my_interfaces:
+        # Create a stp packet
+        stpPkt = mk_stp_pkt(root_id, root_hop_num)
+        log_debug ("Flooding packet {} to {}".format(packet, intf.name))
+        net.send_packet(intf.name, packet)
     
     
     # 5. When a node receives a spanning tree packet it examines the root attribute:
