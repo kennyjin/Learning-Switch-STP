@@ -175,8 +175,8 @@ def main(net):
 
             log_debug(stpmsg.root)
             log_debug(stpmsg.hops_to_root)
-            log_debug(packet[0].src)
-            log_debug(packet[0].dsc)
+            log_debug(packet.get_header(Ethernet).src)
+            log_debug(packet.get_header(Ethernet).dsc)
 
             if stpmsg.root < root_id:
 
@@ -186,7 +186,7 @@ def main(net):
                  # Forward packets on all ports(except incoming)
                 for intf in my_interfaces:
                     if input_port != intf.name:
-                        stpPkt = mk_stp_pkt(root_id, root_hop_num, packet[0].src, packet[0].dsc)
+                        stpPkt = mk_stp_pkt(root_id, root_hop_num, packet.get_header(Ethernet).src, packet.get_header(Ethernet).dsc)
                         log_debug ("Flooding packet {} to {}".format(stpPkt, intf.name))
                         net.send_packet(intf.name, packet)
 
