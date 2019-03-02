@@ -5,6 +5,7 @@ Ethernet learning switch with a simple spanning tree protocal in Python.
 from switchyard.lib.userlib import *
 from spanningtreemessage import SpanningTreeMessage
 import collections
+import time
 
 # The implementation of the data structrue below is adapted from leetcode.
 # https://leetcode.com/problems/lru-cache/discuss/45952/Python-concise-solution-with-comments-(Using-OrderedDict).
@@ -114,6 +115,7 @@ def main(net):
     #    The root node should emit new stp packets every 2 seconds.
     #    All the ports of the router will be in forwarding mode.
 
+    time_last_fwding = time.time()
     # Forward packets on all ports
     for intf in my_interfaces:
         # Create a stp packet
@@ -166,6 +168,16 @@ def main(net):
         try:
             timestamp,input_port,packet = net.recv_packet()
         except NoPackets:
+            curr_time = time.time()
+            # Send packets every 2 seconds
+            if root_id == switch_id && curr_time - time_last_fwding >= 2:
+                time_last_fwding = curr_time
+                # Forward packets on all ports
+                for intf in my_interfaces:
+                    # Create a stp packet
+                    stpPkt = mk_stp_pkt(root_id, root_hop_num)
+                    log_debug ("Flooding packet {} to {}".format(stpPkt, intf.name))
+                    net.send_packet(intf.name, stpPkt)
             continue
         except Shutdown:
             return
