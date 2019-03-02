@@ -110,7 +110,7 @@ def main(net):
     stpPkt = Packet()
     stpPkt += Ethernet()
     stpPkt.add_header(stpPktHeader)
-    log_debug(str(stpPkt))
+    # log_debug(str(stpPkt))
 
 
     # 5. When a node receives a spanning tree packet it examines the root attribute:
