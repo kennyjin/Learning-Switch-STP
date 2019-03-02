@@ -123,6 +123,7 @@ def main(net):
     for intf in my_interfaces:
         # Set this interface to forwarding mode
         fwdModeDict[intf] = True
+        log_debug(intf)
         log_debug(fwdModeDict[intf])
         # Create a stp packet
         stpPkt = mk_stp_pkt(root_id, root_hop_num)
