@@ -72,6 +72,14 @@ def hub_tests():
     s.expect(PacketOutputEvent("eth0", reqpkt, display=Ethernet),
              "Ethernet frame destined for 70:00:00:00:00:01 should be flooded out eth0")
 
+    #16, 15,  A normal packet with destination  learnt should be sent out of ports eth0
+    reqpkt = mk_pkt("60:00:00:00:00:01", "70:00:00:00:00:01", '192.168.1.100', '172.16.42.2')
+    s.expect(PacketInputEvent("eth2", reqpkt, display=Ethernet),
+             "An Ethernet frame from 60:00:00:00:00:00 to 70:00:00:00:00:01 should arrive on eth0")
+    s.expect(PacketOutputEvent("eth0", reqpkt, display=Ethernet),
+             "Ethernet frame destined for 70:00:00:00:00:01 should be flooded out eth0")
+
+
     return s
 
 
