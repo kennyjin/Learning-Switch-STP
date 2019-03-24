@@ -126,7 +126,7 @@ def main(net):
         log_debug(intf.name)
         log_debug(fwdModeDict[intf.name])
         # Create a stp packet
-        stpPkt = mk_stp_pkt(root_id, root_hop_num)
+        stpPkt = mk_stp_pkt(root_id, root_hop_num, switch_id, packet[0].dst)
         log_debug ("Flooding packet {} to {}".format(stpPkt, intf.name))
         net.send_packet(intf.name, stpPkt)
 
@@ -143,7 +143,7 @@ def main(net):
                 # Forward packets on all ports
                 for intf in my_interfaces:
                     # Create a stp packet
-                    stpPkt = mk_stp_pkt(root_id, root_hop_num)
+                    stpPkt = mk_stp_pkt(root_id, root_hop_num, switch_id, packet[0].dst)
                     log_debug ("Flooding packet {} to {}".format(stpPkt, intf.name))
                     net.send_packet(intf.name, stpPkt)
             continue
