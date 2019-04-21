@@ -75,6 +75,7 @@ You can find more detailed information on compiling test scenarios and running i
 
 ## Development notes
 We are providing you with a Ubuntu 14.04 (64-bit) VM image for this assignment. This image has Switchyard, Mininet and Wireshark installed so you do not need to worry about setting up the environment.
+The password is cs640.
 
 you can use log_info to print
 or log_debug (while running swyard pass -d flag - this is a standard python feature).
